@@ -92,18 +92,18 @@ class AssetModelsController extends Controller
             $model->eol = e(Input::get('eol'));
         }
 
-        // Save the model data
-        $model->name                = e(Input::get('name'));
-        $model->modelno             = e(Input::get('modelno'));
-        $model->manufacturer_id     = e(Input::get('manufacturer_id'));
-        $model->category_id         = e(Input::get('category_id'));
-        $model->note                = e(Input::get('note'));
-        $model->user_id             = Auth::user()->id;
-        $model->requestable         = Input::has('requestable');
-
+            // Save the model data
+            $model->name                = e(Input::get('name'));
+            $model->modelno             = e(Input::get('modelno'));
+            $model->manufacturer_id     = e(Input::get('manufacturer_id'));
+            $model->category_id         = e(Input::get('category_id'));
+            $model->note            = e(Input::get('note'));
+            $model->user_id             = Auth::user()->id;
         if (Input::get('custom_fieldset')!='') {
             $model->fieldset_id = e(Input::get('custom_fieldset'));
         }
+
+            //$model->show_mac_address 	= e(Input::get('show_mac_address', '0'));
 
 
         if (Input::file('image')) {
@@ -227,9 +227,7 @@ class AssetModelsController extends Controller
         $model->modelno             = e(Input::get('modelno'));
         $model->manufacturer_id     = e(Input::get('manufacturer_id'));
         $model->category_id         = e(Input::get('category_id'));
-        $model->note                = e(Input::get('note'));
-
-        $model->requestable = Input::has('requestable');
+        $model->note            = e(Input::get('note'));
 
         if (Input::get('custom_fieldset')=='') {
             $model->fieldset_id = null;
@@ -416,7 +414,7 @@ class AssetModelsController extends Controller
 
     public function getDatatable($status = null)
     {
-        $models = AssetModel::with('category', 'assets', 'depreciation', 'manufacturer');
+        $models = AssetModel::with('category', 'assets', 'depreciation');
 
         switch ($status) {
             case 'Deleted':
@@ -491,7 +489,7 @@ class AssetModelsController extends Controller
     */
     public function getDataView($modelID)
     {
-        $assets = Asset::where('model_id', '=', $modelID)->with('company', 'assetstatus');
+        $assets = Asset::where('model_id', '=', $modelID)->with('company');
 
         if (Input::has('search')) {
             $assets = $assets->TextSearch(e(Input::get('search')));

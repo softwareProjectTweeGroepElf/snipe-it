@@ -1,22 +1,20 @@
 <?php
 namespace App\Models;
 
-use App\Helpers\Helper;
-use App\Http\Traits\UniqueUndeletedTrait;
 use App\Models\Actionlog;
 use App\Models\Company;
 use App\Models\Location;
-use App\Models\Loggable;
-use App\Models\Requestable;
-use App\Models\Setting;
-use Auth;
 use Config;
-use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
 use Parsedown;
 use Watson\Validating\ValidatingTrait;
+use App\Http\Traits\UniqueUndeletedTrait;
+use DateTime;
+use App\Models\Setting;
+use App\Helpers\Helper;
+use Auth;
 
 /**
  * Model for Assets.
@@ -25,9 +23,7 @@ use Watson\Validating\ValidatingTrait;
  */
 class Asset extends Depreciable
 {
-    use Loggable;
     use SoftDeletes;
-    use Requestable;
 
   /**
   * The database table used by the model.
@@ -152,8 +148,7 @@ class Asset extends Depreciable
 
             \Mail::send('emails.accept-asset', $data, function ($m) use ($user) {
                 $m->to($user->email, $user->first_name . ' ' . $user->last_name);
-                $m->replyTo(config('mail.reply_to.address'), config('mail.reply_to.name'));
-                $m->subject(trans('mail.Confirm_asset_delivery'));
+                $m->subject('Confirm asset delivery');
             });
         }
 
@@ -214,12 +209,10 @@ class Asset extends Depreciable
     {
 
         $logaction = new Actionlog();
-        $logaction->item_type = Asset::class;
-        $logaction->item_id = $this->id;
-        $logaction->target_type = User::class;
-        $logaction->target_id = $this->assigned_to;
+        $logaction->asset_id = $this->id;
+        $logaction->checkedout_to = $this->assigned_to;
+        $logaction->asset_type = 'hardware';
         $logaction->note = $note;
-        $logaction->user_id = $admin->id;
         if ($checkout_at!='') {
             $logaction->created_at = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime($checkout_at)));
         } else {
@@ -232,10 +225,15 @@ class Asset extends Depreciable
             }
         } else {
             // Update the asset data to null, since it's being checked in
-            $logaction->target_id = '';
+            $logaction->checkedout_to = $asset->assigned_to;
+            $logaction->checkedout_to = '';
+            $logaction->asset_id = $asset->id;
             $logaction->location_id = null;
+            $logaction->asset_type = 'hardware';
+            $logaction->note = $note;
+            $logaction->user_id = $admin->id;
         }
-        $logaction->user()->associate($admin);
+        $logaction->adminlog()->associate($admin);
         $log = $logaction->logaction($action);
 
         return $logaction;
@@ -272,8 +270,8 @@ class Asset extends Depreciable
     public function uploads()
     {
 
-        return $this->hasMany('\App\Models\Actionlog', 'item_id')
-                  ->where('item_type', '=', Asset::class)
+        return $this->hasMany('\App\Models\Actionlog', 'asset_id')
+                  ->where('asset_type', '=', 'hardware')
                   ->where('action_type', '=', 'uploaded')
                   ->whereNotNull('filename')
                   ->orderBy('created_at', 'desc');
@@ -310,8 +308,8 @@ class Asset extends Depreciable
    */
     public function assetlog()
     {
-        return $this->hasMany('\App\Models\Actionlog', 'item_id')
-                  ->where('item_type', '=', Asset::class)
+        return $this->hasMany('\App\Models\Actionlog', 'asset_id')
+                  ->where('asset_type', '=', 'hardware')
                   ->orderBy('created_at', 'desc')
                   ->withTrashed();
     }
@@ -578,12 +576,12 @@ public function checkin_email()
     public function scopeAssetsByLocation($query, $location)
     {
         return $query->where(function ($query) use ($location) {
-
+        
             $query->whereHas('assigneduser', function ($query) use ($location) {
-
+            
                 $query->where('users.location_id', '=', $location->id);
             })->orWhere(function ($query) use ($location) {
-
+            
                 $query->where('assets.rtd_location_id', '=', $location->id);
                 $query->whereNull('assets.assigned_to');
             });

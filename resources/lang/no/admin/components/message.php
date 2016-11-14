@@ -2,34 +2,34 @@
 
 return array(
 
-    'does_not_exist' => 'Komponenten finnes ikke.',
+    'does_not_exist' => 'Component does not exist.',
 
     'create' => array(
-        'error'   => 'Komponenten ble ikke opprettet, vennligst prøv igjen.',
-        'success' => 'Komponent ble opprettet.'
+        'error'   => 'Component was not created, please try again.',
+        'success' => 'Component created successfully.'
     ),
 
     'update' => array(
-        'error'   => 'Komponenten ble ikke oppdatert. Vennligst prøv igjen',
-        'success' => 'Komponent ble oppdatert.'
+        'error'   => 'Component was not updated, please try again',
+        'success' => 'Component updated successfully.'
     ),
 
     'delete' => array(
-        'confirm'   => 'Er du sikker på at du vil slette denne komponenten?',
-        'error'   => 'Det oppstod et problem under sletting av komponenten. Vennligst prøv igjen.',
-        'success' => 'Sletting av komponent vellykket.'
+        'confirm'   => 'Are you sure you wish to delete this component?',
+        'error'   => 'There was an issue deleting the component. Please try again.',
+        'success' => 'The component was deleted successfully.'
     ),
 
      'checkout' => array(
-        'error'   		=> 'Komponent ble ikke sjekket ut. Prøv igjen',
-        'success' 		=> 'Vellykket utsjekk av komponent.',
-        'user_does_not_exist' => 'Denne brukeren er ugyldig. Vennligst prøv igjen.'
+        'error'   		=> 'Component was not checked out, please try again',
+        'success' 		=> 'Component checked out successfully.',
+        'user_does_not_exist' => 'That user is invalid. Please try again.'
     ),
 
     'checkin' => array(
-        'error'   		=> 'Komponenten ble ikke sjekket inn, vennligst prøv igjen',
-        'success' 		=> 'Vellykket innsjekk av komponent.',
-        'user_does_not_exist' => 'Denne brukeren er ugyldig. Prøv igjen.'
+        'error'   		=> 'Component was not checked in, please try again',
+        'success' 		=> 'Component checked in successfully.',
+        'user_does_not_exist' => 'That user is invalid. Please try again.'
     )
 
 

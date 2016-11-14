@@ -3,9 +3,9 @@
 return array(
 
     'assigned_to'   	=> 'Przypisane do',
-    'checkout'   		=> 'Wejście/Wyjście',
+    'checkout'   		=> 'In/Out',
     'id'      			=> 'Id',
-    'license_email'   	=> 'Licencja E-mail',
+    'license_email'   	=> 'License Email',
     'license_name'   	=> 'Licencja przypisana do',
     'purchase_date'   	=> 'Data zakupu',
     'purchased'   		=> 'Zakupiono',

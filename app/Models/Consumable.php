@@ -1,22 +1,20 @@
 <?php
 namespace App\Models;
 
-use App\Models\ActionLog;
-use App\Models\Category;
-use App\Models\Company;
-use App\Models\ConsumableAssignment;
-use App\Models\Location;
-use App\Models\Loggable;
 use App\Models\User;
+use App\Models\ConsumableAssignment;
+use App\Models\Company;
+use App\Models\Location;
+use App\Models\Category;
+use App\Models\ActionLog;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Watson\Validating\ValidatingTrait;
 
 class Consumable extends Model
 {
-    use CompanyableTrait;
-    use Loggable;
     use SoftDeletes;
+    use CompanyableTrait;
 
     protected $dates = ['deleted_at'];
     protected $table = 'consumables';
@@ -87,7 +85,7 @@ class Consumable extends Model
     */
     public function assetlog()
     {
-        return $this->hasMany('\App\Models\Actionlog', 'item_id')->where('item_type', Consumable::class)->orderBy('created_at', 'desc')->withTrashed();
+        return $this->hasMany('\App\Models\Actionlog', 'consumable_id')->where('asset_type', '=', 'consumable')->orderBy('created_at', 'desc')->withTrashed();
     }
 
 

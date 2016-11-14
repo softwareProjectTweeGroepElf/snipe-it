@@ -1,13 +1,12 @@
 <?php
 namespace App\Models;
 
-use App\Models\ActionLog;
-use App\Models\Category;
-use App\Models\Company;
-use App\Models\ConsumableAssignment;
-use App\Models\Location;
-use App\Models\Loggable;
 use App\Models\User;
+use App\Models\ConsumableAssignment;
+use App\Models\Company;
+use App\Models\Location;
+use App\Models\Category;
+use App\Models\ActionLog;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Watson\Validating\ValidatingTrait;
@@ -19,9 +18,8 @@ use Watson\Validating\ValidatingTrait;
  */
 class Component extends Model
 {
-    use CompanyableTrait;
-    use Loggable;
     use SoftDeletes;
+    use CompanyableTrait;
 
     protected $dates = ['deleted_at'];
     protected $table = 'components';
@@ -87,7 +85,7 @@ class Component extends Model
     */
     public function assetlog()
     {
-        return $this->hasMany('\App\Models\Actionlog', 'item_id')->where('item_type', Component::class)->orderBy('created_at', 'desc')->withTrashed();
+        return $this->hasMany('\App\Models\Actionlog', 'component_id')->where('asset_type', '=', 'component')->orderBy('created_at', 'desc')->withTrashed();
     }
 
 
@@ -141,7 +139,6 @@ class Component extends Model
                         });
                     })->orWhere('components.name', 'LIKE', '%'.$search.'%')
                             ->orWhere('components.order_number', 'LIKE', '%'.$search.'%')
-                            ->orWhere('components.serial_number', 'LIKE', '%'.$search.'%')
                             ->orWhere('components.purchase_cost', 'LIKE', '%'.$search.'%')
                             ->orWhere('components.purchase_date', 'LIKE', '%'.$search.'%');
             }

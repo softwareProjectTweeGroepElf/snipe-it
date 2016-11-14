@@ -100,7 +100,6 @@ class AccessoriesController extends Controller
 
         // Was the accessory created?
         if ($accessory->save()) {
-            $accessory->logCreate();
             // Redirect to the new accessory  page
             return redirect()->to("admin/accessories")->with('success', trans('admin/accessories/message.create.success'));
         }
@@ -310,7 +309,14 @@ class AccessoriesController extends Controller
         'user_id' => Auth::user()->id,
         'assigned_to' => e(Input::get('assigned_to'))));
 
-        $logaction = $accessory->logCheckout(e(Input::get('note')));
+        $logaction = new Actionlog();
+        $logaction->accessory_id = $accessory->id;
+        $logaction->asset_id = 0;
+        $logaction->checkedout_to = $accessory->assigned_to;
+        $logaction->asset_type = 'accessory';
+        $logaction->location_id = $user->location_id;
+        $logaction->user_id = Auth::user()->id;
+        $logaction->note = e(Input::get('note'));
 
 
 
@@ -334,11 +340,11 @@ class AccessoriesController extends Controller
                 'fields' => [
                   [
                   'title' => 'Checked Out:',
-                  'value' => 'Accessory <'.config('app.url').'/admin/accessories/'.$accessory->id.'/view'.'|'.$accessory->name.'> checked out to <'.config('app.url').'/admin/users/'.$user->id.'/view|'.$user->fullName().'> by <'.config('app.url').'/admin/users/'.$admin_user->id.'/view'.'|'.$admin_user->fullName().'>.'
+                  'value' => strtoupper($logaction->asset_type).' <'.config('app.url').'/admin/accessories/'.$accessory->id.'/view'.'|'.$accessory->name.'> checked out to <'.config('app.url').'/admin/users/'.$user->id.'/view|'.$user->fullName().'> by <'.config('app.url').'/admin/users/'.$admin_user->id.'/view'.'|'.$admin_user->fullName().'>.'
                   ],
                   [
                       'title' => 'Note:',
-                      'value' => e(Input::get('note'))
+                      'value' => e($logaction->note)
                   ],
                 ]
                 ])->send('Accessory Checked Out');
@@ -348,6 +354,9 @@ class AccessoriesController extends Controller
 
         }
 
+
+
+        $log = $logaction->logaction('checkout');
 
         $accessory_user = DB::table('accessories_users')->where('assigned_to', '=', $accessory->assigned_to)->where('accessory_id', '=', $accessory->id)->first();
 
@@ -366,8 +375,7 @@ class AccessoriesController extends Controller
 
             Mail::send('emails.accept-accessory', $data, function ($m) use ($user) {
                 $m->to($user->email, $user->first_name . ' ' . $user->last_name);
-                $m->replyTo(config('mail.reply_to.address'), config('mail.reply_to.name'));
-                $m->subject(trans('mail.Confirm_accessory_delivery'));
+                $m->subject('Confirm accessory delivery');
             });
         }
 
@@ -427,13 +435,20 @@ class AccessoriesController extends Controller
             return redirect()->to('admin/accessories')->with('error', trans('general.insufficient_permissions'));
         }
 
-        $logaction = $accessory->logCheckin(e(Input::get('note')));
+        $logaction = new Actionlog();
+        $logaction->checkedout_to = e($accessory_user->assigned_to);
         $return_to = e($accessory_user->assigned_to);
         $admin_user = Auth::user();
 
 
       // Was the accessory updated?
         if (DB::table('accessories_users')->where('id', '=', $accessory_user->id)->delete()) {
+
+            $logaction->accessory_id = e($accessory->id);
+            $logaction->location_id = null;
+            $logaction->asset_type = 'accessory';
+            $logaction->user_id = e($admin_user->id);
+            $logaction->note = e(Input::get('note'));
 
             $settings = Setting::getSettings();
 
@@ -454,7 +469,7 @@ class AccessoriesController extends Controller
                         'fields' => [
                             [
                                 'title' => 'Checked In:',
-                                'value' => class_basename(strtoupper($logaction->item_type)).' <'.config('app.url').'/admin/accessories/'.e($accessory->id).'/view'.'|'.e($accessory->name).'> checked in by <'.config('app.url').'/admin/users/'.e($admin_user->id).'/view'.'|'.e($admin_user->fullName()).'>.'
+                                'value' => strtoupper($logaction->asset_type).' <'.config('app.url').'/admin/accessories/'.e($accessory->id).'/view'.'|'.e($accessory->name).'> checked in by <'.config('app.url').'/admin/users/'.e($admin_user->id).'/view'.'|'.e($admin_user->fullName()).'>.'
                             ],
                             [
                                 'title' => 'Note:',
@@ -469,6 +484,9 @@ class AccessoriesController extends Controller
                 }
 
             }
+
+
+            $log = $logaction->logaction('checkin from');
 
             if (!is_null($accessory_user->assigned_to)) {
                 $user = User::find($accessory_user->assigned_to);
@@ -485,8 +503,7 @@ class AccessoriesController extends Controller
 
                 Mail::send('emails.checkin-asset', $data, function ($m) use ($user) {
                     $m->to($user->email, $user->first_name . ' ' . $user->last_name);
-                    $m->replyTo(config('mail.reply_to.address'), config('mail.reply_to.name'));
-                    $m->subject(trans('mail.Confirm_Accessory_Checkin'));
+                    $m->subject('Confirm Accessory Checkin');
                 });
             }
 
@@ -530,11 +547,9 @@ class AccessoriesController extends Controller
     **/
     public function getDatatable(Request $request)
     {
-        $accessories = Company::scopeCompanyables(
-            Accessory::select('accessories.*')
-            ->whereNull('accessories.deleted_at')
-            ->with('category', 'company', 'manufacturer', 'users', 'location')
-        );
+        $accessories = Company::scopeCompanyables(Accessory::select('accessories.*')->with('category', 'company'))
+        ->whereNull('accessories.deleted_at');
+
         if (Input::has('search')) {
             $accessories = $accessories->TextSearch(e(Input::get('search')));
         }

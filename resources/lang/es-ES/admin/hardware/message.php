@@ -37,11 +37,9 @@ return array(
     ),
 
     'import' => array(
-        'error'                 => 'Algunos elementos no se pudieron importar correctamente.',
-        'errorDetail'           => 'Estos elementos no pudieron importarse debido a errores.',
-        'success'               => "Tu archivo ha sido importado",
-        'file_delete_success'   => "Tu archivo ha sido eliminado con éxito",
-        'file_delete_error'      => "No pudimos eliminar tu archivo",
+        'error'         => 'Some items did not import correctly.',
+        'errorDetail'   => 'The following Items were not imported because of errors.',
+        'success'       => "Your file has been imported",
     ),
 
 
@@ -55,7 +53,7 @@ return array(
         'error'   		=> 'Equipo no asignado, intentalo de nuevo',
         'success' 		=> 'Equipo asignado.',
         'user_does_not_exist' => 'Este usuario no es correcto. Intentalo de nuevo.',
-        'not_available' => '¡Ese artículo no está disponible para retirada!'
+        'not_available' => 'That asset is not available for checkout!'
     ),
 
     'checkin' => array(
@@ -69,7 +67,6 @@ return array(
     'requests' => array(
         'error'   		=> 'Bien no solicitado, por favor inténtelo de nuevo',
         'success' 		=> 'Bien solicitado correctamente.',
-        'canceled'      => 'Solicitud de retirada cancelada con éxito'
     )
 
 );

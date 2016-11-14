@@ -2,10 +2,10 @@
 
 return array(
 
-    'asset_manufacturers'	=> '資產製造商',
-    'create'				=> '新增製造商',
+    'asset_manufacturers'	=> 'Asset Manufacturers',
+    'create'				=> 'Create Manufacturer',
     'id'   					=> 'ID',
-    'name'      			=> '製造商名稱',
-    'update'				=> '更新製造商',
+    'name'      			=> 'Manufacturer Name',
+    'update'				=> 'Update Manufacturer',
 
 );

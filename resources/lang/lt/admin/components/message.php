@@ -17,13 +17,13 @@ return array(
     'delete' => array(
         'confirm'   => 'Ar tikrai norite ištrinti šį komponentą?',
         'error'   => 'There was an issue deleting the component. Please try again.',
-        'success' => 'Komponentas ištrintas sėkmingai.'
+        'success' => 'The component was deleted successfully.'
     ),
 
      'checkout' => array(
         'error'   		=> 'Component was not checked out, please try again',
         'success' 		=> 'Component checked out successfully.',
-        'user_does_not_exist' => 'Šis naudotojas neteisingas. Prašome bandykite dar kartą.'
+        'user_does_not_exist' => 'That user is invalid. Please try again.'
     ),
 
     'checkin' => array(

@@ -255,18 +255,6 @@ class AuthServiceProvider extends ServiceProvider
             }
         });
 
-        $gate->define('components.checkout', function ($user) {
-            if (($user->hasAccess('components.checkout')) || ($user->hasAccess('admin'))) {
-                return true;
-            }
-        });
-
-        $gate->define('components.checkout', function ($user) {
-            if (($user->hasAccess('components.checkout')) || ($user->hasAccess('admin'))) {
-                return true;
-            }
-        });
-
         // Checks for some level of management
         $gate->define('components.manage', function ($user) {
             if (($user->hasAccess('components.edit')) || ($user->hasAccess('components.delete')) || ($user->hasAccess('components.checkout')) || ($user->hasAccess('admin'))) {
@@ -323,16 +311,6 @@ class AuthServiceProvider extends ServiceProvider
         // Checks for some level of management
         $gate->define('licenses.manage', function ($user) {
             if (($user->hasAccess('licenses.checkin')) || ($user->hasAccess('licenses.edit')) || ($user->hasAccess('licenses.delete')) || ($user->hasAccess('licenses.checkout')) || ($user->hasAccess('admin'))) {
-                return true;
-            }
-        });
-
-
-        # -----------------------------------------
-        # Self
-        # -----------------------------------------
-        $gate->define('self.two_factor', function ($user) {
-            if (($user->hasAccess('self.two_factor')) || ($user->hasAccess('admin'))) {
                 return true;
             }
         });

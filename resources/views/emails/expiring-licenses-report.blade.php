@@ -2,13 +2,14 @@
 
 @section('content')
 
-	<p>{{ trans_choice('mail.There_are',$count) }} {{ $count }} {{ trans_choice('mail.licenses_expiring',$count) }}</p>
+<p>There are {{ $count }} license(s) expiring next 60 days.</p>
+
 
 <table style="border: 1px solid black; padding: 5px;" width="100%" cellspacing="0" cellpadding="3">
 	<tr>
-		<td><strong>{{ trans('mail.name') }}</strong></td>
-		<td><strong>{{ trans('mail.expires') }}</strong></td>
-		<td><strong>{{ trans('mail.Days') }}</strong></td>
+		<td><strong>Name</strong></td>
+		<td><strong>Expires</strong></td>
+		<td><strong>Days</strong></td>
 	</tr>
 
 {!! $email_content !!}

@@ -37,11 +37,9 @@ return array(
     ),
 
     'import' => array(
-        'error'                 => 'Some items did not import correctly.',
-        'errorDetail'           => 'The following Items were not imported because of errors.',
-        'success'               => "Your file has been imported",
-        'file_delete_success'   => "Your file has been been successfully deleted",
-        'file_delete_error'      => "The file was unable to be deleted",
+        'error'         => 'Some items did not import correctly.',
+        'errorDetail'   => 'The following Items were not imported because of errors.',
+        'success'       => "Your file has been imported",
     ),
 
 
@@ -69,7 +67,6 @@ return array(
     'requests' => array(
         'error'   		=> '資産は要求されませんでした。もう一度、やり直して下さい。',
         'success' 		=> '資産の要求処理が成功しました。',
-        'canceled'      => 'Checkout request successfully canceled'
     )
 
 );

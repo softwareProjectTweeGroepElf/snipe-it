@@ -36,11 +36,9 @@ return array(
     ),
 
     'import' => array(
-        'error'                 => '某些字段没有正确导入',
-        'errorDetail'           => '以下项由于错误未被导入',
-        'success'               => "您的文件已被导入",
-        'file_delete_success'   => "Your file has been been successfully deleted",
-        'file_delete_error'      => "The file was unable to be deleted",
+        'error'         => 'Some items did not import correctly.',
+        'errorDetail'   => 'The following Items were not imported because of errors.',
+        'success'       => "Your file has been imported",
     ),
 
 
@@ -54,7 +52,7 @@ return array(
         'error'   		=> '资产未被借出，请重试',
         'success' 		=> '资产借出成功。',
         'user_does_not_exist' => '无效用户，请重试。',
-        'not_available' => '此资产无法借出'
+        'not_available' => 'That asset is not available for checkout!'
     ),
 
     'checkin' => array(
@@ -68,7 +66,6 @@ return array(
     'requests' => array(
         'error'   		=> '未能成功请求分配资产，请重试。',
         'success' 		=> '成功请求资产',
-        'canceled'      => 'Checkout request successfully canceled'
     )
 
 );

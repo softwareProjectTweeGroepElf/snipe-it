@@ -23,7 +23,7 @@ class CheckForSetup
             }
 
         } else {
-            if (!($request->is('setup*')) && !($request->is('.env'))) {
+            if (!$request->is('setup*')) {
                 return redirect(config('app.url').'/setup')->with('Request', $request);
             }
 

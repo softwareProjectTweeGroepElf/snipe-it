@@ -14,36 +14,6 @@
 @section('content')
 
 
-    @if (isset($status))
-
-        @if (count($status['error']) > 0)
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="box box-default">
-                        <div class="alert alert-danger">
-                            <i class="fa fa-exclamation-circle faa-pulse animated"></i>
-                            <strong>{{ count($status['error']) }} Error Messagess: </strong>
-                            Please see below for errors.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
-
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="box box-default">
-                    <div class="alert alert-success">
-                        <i class="fa fa-check faa-pulse animated"></i>
-                        <strong>{{ count($status['success']) }} Success Messages: </strong>
-                        Please see below for details.
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        @endif
-
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="box box-default">
@@ -130,63 +100,21 @@
 
 </form>
 
- </div>
+
+
+
+</div>
 
             @if (isset($status))
+                <table class="table">
+                    @foreach($status['error'] as $type => $msg)
+                        <tr class="danger"><td>{{ $msg  }}</td></tr>
+                    @endforeach
 
-
-                @if (count($status['error']) > 0)
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="box box-default">
-                            <div class="box-header with-border">
-                                <h3 class="box-title"> {{ count($status['error']) }} Error Messages </h3>
-                            </div>
-                            <div class="box-body">
-                                <div style="height : 400px; overflow : auto;">
-                                    <table class="table">
-                                        @for ($x = 0; $x < count($status['error']); $x++)
-                                            @foreach($status['error'][$x] as $object_type => $message)
-                                            <tr class="danger">
-                                                <td><strong>{{ ucwords($object_type)  }} {{ key($message)  }}:</strong></td>
-                                                <td>{{ $message[key($message)]['msg']  }}</td>
-                                            </tr>
-                                            @endforeach
-                                        @endfor
-                                    </table>
-                               </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                @endif
-
-                @if (count($status['success']) > 0)
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="box box-default">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title"> {{ count($status['success']) }} Success Messages </h3>
-                                    </div>
-                                    <div class="box-body">
-                                        <div style="height : 400px; overflow : auto;">
-                                            <table class="table">
-                                                @for ($x = 0; $x < count($status['success']); $x++)
-                                                    @foreach($status['success'][$x] as $object_type => $message)
-                                                        <tr class="success">
-                                                            <td><strong>{{ ucwords($object_type)  }} {{ key($message)  }}:</strong></td>
-                                                            <td>{{ $message[key($message)]['msg']  }}</td>
-                                                        </tr>
-                                                    @endforeach
-                                                @endfor
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                @endif
+                    @foreach($status['success'] as $type => $msg)
+                        <tr class="success"><td>{{ $msg  }}</td></tr>
+                    @endforeach
+                </table>
             @endif
 
         </div></div></div>

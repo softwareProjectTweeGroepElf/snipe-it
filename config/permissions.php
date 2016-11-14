@@ -106,7 +106,7 @@ return array(
             'display'    => true,
         ),
         array(
-            'permission' => 'accessories.create',
+            'permission' => 'accessory.create',
             'label'      => 'Create ',
             'note'       => '',
             'display'    => true,
@@ -274,16 +274,6 @@ return array(
             'permission' => 'users.delete',
             'label'      => 'Delete Users',
             'note'       => '',
-            'display'    => true,
-        ),
-
-    ),
-
-    'Self' => array(
-        array(
-            'permission' => 'self.two_factor',
-            'label'      => 'Two-Factor Authentication',
-            'note'       => 'The user may disable/enable two-factor authentication themselves if two-factor is enabled and set to selective.',
             'display'    => true,
         ),
 

@@ -136,8 +136,7 @@ final class Company extends Model
 
     public static function scopeCompanyables($query, $column = 'company_id')
     {
-        // If not logged in and hitting this, assume we are on the command line and don't scope?'
-        if (!static::isFullMultipleCompanySupportEnabled() || (Auth::check() && Auth::user()->isSuperUser()) || (!Auth::check())) {
+        if (!static::isFullMultipleCompanySupportEnabled() || (Auth::check() && Auth::user()->isSuperUser())) {
             return $query;
         } else {
             return static::scopeCompanyablesDirectly($query, $column);
@@ -176,28 +175,5 @@ final class Company extends Model
         } else {
             return e($company->name);
         }
-    }
-
-    public function users() {
-        return $this->hasMany(User::class);
-    }
-
-    public function assets() {
-        return $this->hasMany(Asset::class);
-    }
-
-    public function licenses() {
-        return $this->hasMany(License::class);
-    }
-    public function accessories() {
-        return $this->hasMany(Accessory::class);
-    }
-
-    public function consumables() {
-        return $this->hasMany(Consumable::class);
-    }
-
-    public function components() {
-        return $this->hasMany(Component::class);
     }
 }

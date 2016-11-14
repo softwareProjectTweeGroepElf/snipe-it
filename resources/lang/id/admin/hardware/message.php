@@ -16,32 +16,30 @@ return array(
     'update' => array(
         'error'   			=> 'Gagal perbarui aset, silahkan coba kembali',
         'success' 			=> 'Sukses perbarui aset.',
-        'nothing_updated'	=>  'Tidak ada kolom yang dipilih, jadi tidak ada yang diperbaharui.',
+        'nothing_updated'	=>  'No fields were selected, so nothing was updated.',
     ),
 
     'restore' => array(
-        'error'   		=> 'Aset gagal dikembalikan, silahkan coba lagi',
-        'success' 		=> 'Aset berhasil dikembalikan.'
+        'error'   		=> 'Asset was not restored, please try again',
+        'success' 		=> 'Asset restored successfully.'
     ),
 
     'deletefile' => array(
-        'error'   => 'Berkas tidak terhapus. Silahkan coba kembali.',
-        'success' => 'Berkas berhasil dihapus.',
+        'error'   => 'File not deleted. Please try again.',
+        'success' => 'File successfully deleted.',
     ),
 
     'upload' => array(
-        'error'   => 'Berkas gagal diunggah. Silahkan coba kembali.',
-        'success' => 'Berkas berhasil diunggah.',
-        'nofiles' => 'Anda belum memilih berkas untuk diunggah, atau berkas yang akan diunggah terlalu besar',
-        'invalidfiles' => 'Satu atau beberapa berkas Anda terlalu besar atau termasuk tipe berkas yang tidak diizinkan. Berkas yang diperbolehkan adalah png, gif, jpg, doc, docx, pdf, dan txt.',
+        'error'   => 'File(s) not uploaded. Please try again.',
+        'success' => 'File(s) successfully uploaded.',
+        'nofiles' => 'You did not select any files for upload, or the file you are trying to upload is too large',
+        'invalidfiles' => 'One or more of your files is too large or is a filetype that is not allowed. Allowed filetypes are png, gif, jpg, doc, docx, pdf, and txt.',
     ),
 
     'import' => array(
-        'error'                 => 'Beberapa item tidak terimpor dengan benar.',
-        'errorDetail'           => 'Item berikut tidak terimpor karena ada kesalahan.',
-        'success'               => "Berkas Anda berhasil terimpor",
-        'file_delete_success'   => "Your file has been been successfully deleted",
-        'file_delete_error'      => "The file was unable to be deleted",
+        'error'         => 'Some items did not import correctly.',
+        'errorDetail'   => 'The following Items were not imported because of errors.',
+        'success'       => "Your file has been imported",
     ),
 
 
@@ -55,7 +53,7 @@ return array(
         'error'   		=> 'Aset gagal di berikan, silahkan coba kembali',
         'success' 		=> 'Sukses memberikan aset.',
         'user_does_not_exist' => 'Pengguna tersebut tidak terdaftar. Silahkan coba kembali.',
-        'not_available' => 'Aset tersebut tidak tersedia untuk checkout!'
+        'not_available' => 'That asset is not available for checkout!'
     ),
 
     'checkin' => array(
@@ -69,7 +67,6 @@ return array(
     'requests' => array(
         'error'   		=> 'Aset gagal di minta, silahkan coba kembali',
         'success' 		=> 'Sukses meminta aset.',
-        'canceled'      => 'Checkout request successfully canceled'
     )
 
 );

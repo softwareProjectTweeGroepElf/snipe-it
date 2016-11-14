@@ -1,7 +1,7 @@
-{{ trans('mail.hi') }} {{ $first_name }},
+Hi {{ $first_name }},
 
-{{ trans('mail.login_first_admin') }}
+Login to your new Snipe-IT installation using the credentials below:
 
 URL: {{ config('app.url') }}
-{{ trans('mail.username') }} {{ $username }}
-{{ trans('mail.password') }} {{ $password }}
+Username: {{ $username }}
+Password: {{ $password }}

@@ -1,4 +1,4 @@
 <?php
 return [
-    'select_company' => 'Pilih Perusahaan',
+    'select_company' => 'Select Company',
 ];

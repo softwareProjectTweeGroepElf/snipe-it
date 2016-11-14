@@ -33,7 +33,7 @@ class ReportsController extends Controller
 {
 
     /**
-    * Returns a view that displays the accessories report.
+    * Returns a view that displaysthe accessories report.
     *
     * @author [A. Gianotto] [<snipe@snipe.net>]
     * @since [v1.0]
@@ -292,7 +292,11 @@ class ReportsController extends Controller
     public function getActivityReport()
     {
         $log_actions = Actionlog::orderBy('created_at', 'DESC')
-                                ->with('item')
+                                ->with('adminlog')
+                                ->with('accessorylog')
+                                ->with('assetlog')
+                                ->with('licenselog')
+                                ->with('userlog')
                                 ->orderBy('created_at', 'DESC')
                                 ->get();
 
@@ -300,134 +304,16 @@ class ReportsController extends Controller
     }
 
     /**
-     * Returns Activity Report JSON.
-     *
-     * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v1.0]
-     * @return View
-     */
-    public function getActivityReportDataTable()
-    {
-        $activitylogs = Company::scopeCompanyables(Actionlog::with('item', 'user', 'target'))->orderBy('created_at', 'DESC');
-
-        if (Input::has('search')) {
-            $activity = $activity->TextSearch(e(Input::get('search')));
-        }
-
-        if (Input::has('offset')) {
-            $offset = e(Input::get('offset'));
-        } else {
-            $offset = 0;
-        }
-
-        if (Input::has('limit')) {
-            $limit = e(Input::get('limit'));
-        } else {
-            $limit = 50;
-        }
-
-
-        $allowed_columns = ['created_at'];
-        $order = Input::get('order') === 'asc' ? 'asc' : 'desc';
-        $sort = in_array(Input::get('sort'), $allowed_columns) ? e(Input::get('sort')) : 'created_at';
-
-
-        $activityCount = $activitylogs->count();
-        $activitylogs = $activitylogs->offset($offset)->limit($limit)->get();
-
-        $rows = array();
-        foreach ($activitylogs as $activity) {
-
-            if ($activity->itemType() == "asset") {
-                $activity_icons = '<i class="fa fa-barcode"></i>';
-            } elseif ($activity->itemType() == "accessory") {
-                $activity_icons = '<i class="fa fa-keyboard-o"></i>';
-            } elseif ($activity->itemType()=="consumable") {
-                $activity_icons = '<i class="fa fa-tint"></i>';
-            } elseif ($activity->itemType()=="license"){
-                $activity_icons = '<i class="fa fa-floppy-o"></i>';
-            } elseif ($activity->itemType()=="component") {
-                $activity_icons = '<i class="fa fa-hdd-o"></i>';
-            } else {
-                $activity_icons = '<i class="fa fa-paperclip"></i>';
-            }
-
-            if (($activity->item) && ($activity->itemType()=="asset")) {
-              $activity_item = '<a href="'.route('view/hardware', $activity->item_id).'">'.e($activity->item->asset_tag).' - '. e($activity->item->showAssetName()).'</a>';
-                $item_type = 'asset';
-            } elseif ($activity->item) {
-                $activity_item = '<a href="' . route('view/' . $activity->itemType(),
-                        $activity->item_id) . '">' . e($activity->item->name) . '</a>';
-                $item_type = $activity->itemType();
-
-            } else {
-                $activity_item = "unkonwn";
-                $item_type = "null";
-            }
-            
-
-            if (($activity->user) && ($activity->action_type=="uploaded") && ($activity->itemType()=="user")) {
-                $activity_target = '<a href="'.route('view/user', $activity->target_id).'">'.$activity->user->fullName().'</a>';
-            } elseif ($activity->target_type === "App\Models\Asset") {
-                if($activity->target) {
-                    $activity_target = '<a href="'.route('view/hardware', $activity->target_id).'">'.$activity->target->showAssetName().'</a>';
-                } else {
-                    $activity_target = "";
-                }
-            } elseif ( $activity->target_type === "App\Models\User") {
-                if($activity->target) {
-                   $activity_target = '<a href="'.route('view/user', $activity->target_id).'">'.$activity->target->fullName().'</a>';
-                } else {
-                    $activity_target = '';
-                }
-            } elseif (($activity->action_type=='accepted') || ($activity->action_type=='declined')) {
-                $activity_target = '<a href="' . route('view/user', $activity->item->assigneduser->id) . '">' . e($activity->item->assigneduser->fullName()) . '</a>';
-
-            } elseif ($activity->action_type=='requested') {
-                if ($activity->user) {
-                    $activity_target =  '<a href="'.route('view/user', $activity->user_id).'">'.$activity->user->fullName().'</a>';
-                } else {
-                    $activity_target = '';
-                }
-            } else {
-                if($activity->target) {
-                    $activity_target = $activity->target->id;
-                } else {
-                    $activity_target = "";
-                }
-            }
-
-            
-            $rows[] = array(
-                'icon'          => $activity_icons,
-                'created_at'    => date("M d, Y g:iA", strtotime($activity->created_at)),
-                'action_type'              => strtolower(trans('general.'.str_replace(' ','_',$activity->action_type))),
-                'admin'         =>  $activity->user ? (string) link_to('/admin/users/'.$activity->user_id.'/view', $activity->user->fullName()) : '',
-                'target'          => $activity_target,
-                'item'          => $activity_item,
-                'item_type'     => $item_type,
-                'note'     => e($activity->note),
-
-            );
-        }
-
-        $data = array('total'=>$activityCount, 'rows'=>$rows);
-
-        return $data;
-
-    }
-
-    /**
-     * Displays license report
-     *
-     * @author [A. Gianotto] [<snipe@snipe.net>]
-     * @since [v1.0]
-     * @return View
-     */
+    * Displays license report
+    *
+    * @author [A. Gianotto] [<snipe@snipe.net>]
+    * @since [v1.0]
+    * @return View
+    */
     public function getLicenseReport()
     {
 
-        $licenses = License::with('depreciation')->orderBy('created_at', 'DESC')
+        $licenses = License::orderBy('created_at', 'DESC')
                            ->with('company')
                            ->get();
 
@@ -454,7 +340,6 @@ class ReportsController extends Controller
             trans('admin/licenses/form.remaining_seats'),
             trans('admin/licenses/form.expiration'),
             trans('admin/licenses/form.date'),
-            trans('admin/licenses/form.depreciation'),
             trans('admin/licenses/form.cost')
         ];
 
@@ -470,7 +355,6 @@ class ReportsController extends Controller
             $row[] = $license->remaincount();
             $row[] = $license->expiration_date;
             $row[] = $license->purchase_date;
-            $row[] = ($license->depreciation!='') ? '' : e($license->depreciation->name);
             $row[] = '"' . Helper::formatCurrencyOutput($license->purchase_cost) . '"';
 
             $rows[] = implode($row, ',');
@@ -542,9 +426,6 @@ class ReportsController extends Controller
         }
         if (( e(Input::get('purchase_cost')) == '1' ) && ( e(Input::get('depreciation')) != '1' )) {
             $header[] = 'Purchase Cost';
-        }
-        if (e(Input::get('eol')) == '1') {
-            $header[] = 'EOL';
         }
         if (e(Input::get('order')) == '1') {
             $header[] = 'Order Number';
@@ -621,9 +502,6 @@ class ReportsController extends Controller
             if (e(Input::get('purchase_cost')) == '1' && ( e(Input::get('depreciation')) != '1' )) {
                 $row[] = '"' . Helper::formatCurrencyOutput($asset->purchase_cost) . '"';
             }
-            if (e(Input::get('eol')) == '1') {
-                $row[] = '"' .($asset->eol_date()) ? $asset->eol_date() : ''. '"';
-            }
             if (e(Input::get('order')) == '1') {
                 if ($asset->order_number) {
                     $row[] = e($asset->order_number);
@@ -632,7 +510,7 @@ class ReportsController extends Controller
                 }
             }
             if (e(Input::get('supplier')) == '1') {
-                if ($asset->supplier) {
+                if ($asset->supplier_id) {
                     $row[] = '"' .e($asset->supplier->name) . '"';
                 } else {
                     $row[] = '';
@@ -705,7 +583,7 @@ class ReportsController extends Controller
             foreach ($customfields as $customfield) {
                 $column_name = $customfield->db_column_name();
                 if (e(Input::get($customfield->db_column_name())) == '1') {
-                    $row[] = str_replace(",", "\,", $asset->$column_name);
+                    $row[] = $asset->$column_name;
                 }
             }
 
@@ -763,7 +641,6 @@ class ReportsController extends Controller
         $rows = [ ];
 
         $header = [
-            trans('admin/hardware/table.asset_tag'),
             trans('admin/asset_maintenances/table.asset_name'),
             trans('admin/asset_maintenances/table.supplier_name'),
             trans('admin/asset_maintenances/form.asset_maintenance_type'),
@@ -779,7 +656,6 @@ class ReportsController extends Controller
 
         foreach ($assetMaintenances as $assetMaintenance) {
             $row   = [ ];
-            $row[] = str_replace(',', '', e($assetMaintenance->asset->asset_tag));
             $row[] = str_replace(',', '', e($assetMaintenance->asset->name));
             $row[] = str_replace(',', '', e($assetMaintenance->supplier->name));
             $row[] = e($assetMaintenance->improvement_type);

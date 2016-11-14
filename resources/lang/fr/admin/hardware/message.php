@@ -37,11 +37,9 @@ return array(
     ),
 
     'import' => array(
-        'error'                 => 'Certains éléments n\'ont pas été correctement importés.',
-        'errorDetail'           => 'Les éléments suivants n\'ont pas été importés à cause d\'erreurs.',
-        'success'               => "Votre fichier a bien été importé",
-        'file_delete_success'   => "Votre fichier a été correctement supprimé",
-        'file_delete_error'      => "Le fichier n’a pas pu être supprimé",
+        'error'         => 'Some items did not import correctly.',
+        'errorDetail'   => 'The following Items were not imported because of errors.',
+        'success'       => "Your file has been imported",
     ),
 
 
@@ -55,7 +53,7 @@ return array(
         'error'   		=> 'Ce bien n\'a pas été sorti, veuillez réessayer',
         'success' 		=> 'Ce bien a été sorti correctement.',
         'user_does_not_exist' => 'Cet utilisateur est invalide. Veuillez réessayer.',
-        'not_available' => 'Ce bien n\'est pas disponible pour être sorti!'
+        'not_available' => 'That asset is not available for checkout!'
     ),
 
     'checkin' => array(
@@ -69,7 +67,6 @@ return array(
     'requests' => array(
         'error'   		=> 'Le bien n\'a pas été demandé, merci d\'essayer à nouveau',
         'success' 		=> 'Le bien a été demandé correctement.',
-        'canceled'      => 'La demande de paiement a été annulée'
     )
 
 );

@@ -75,22 +75,6 @@
               <div class="table-responsive" style="margin-top: 10px;">
                 <table class="table">
                   <tbody>
-                  @if ($asset->assetstatus)
-                      <tr>
-                          <td>{{ trans('general.status') }}</td>
-                          <td>
-                              @if ($asset->assetstatus->color)
-                              <span class="label label-default" style="background-color: {{ e($asset->assetstatus->color) }};">
-                                  &nbsp; &nbsp;</span>
-                              </span>
-                              @endif
-
-                              {{ $asset->assetstatus->name }}
-
-                              ({{ $asset->assetstatus->getStatuslabelType() }})
-                           </td>
-                      </tr>
-                  @endif
                     @if ($asset->company)
                       <tr>
                         <td>{{ trans('general.company') }}</td>
@@ -110,40 +94,28 @@
                       </tr>
                     @endif
                     @if ($asset->model->manufacturer)
-
-                          <tr>
-                            <td>{{ trans('admin/hardware/form.manufacturer') }}</td>
-                            <td>
-                             @can('superuser')
-                              <a href="{{ route('view/manufacturer', $asset->model->manufacturer->id) }}">
-                              {{ $asset->model->manufacturer->name }}
-                              </a>
-                             @else
-                                    {{ $asset->model->manufacturer->name }}
-                              @endcan
-                             </td>
-                          </tr>
-                          <tr>
-                            <td>
-                                {{ trans('admin/hardware/form.model') }}</td>
-                            <td>
-                                @can('superuser')
-                                    <a href="{{ route('view/model', $asset->model->id) }}">
-                                    {{ $asset->model->name }}
-                                    </a>
-                                 @else
-                                    {{ $asset->model->name }}
-                                @endcan
-
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>{{ trans('admin/models/table.modelnumber') }}</td>
-                            <td>
-                              {{ $asset->model->modelno }}
-                             </td>
-                          </tr>
-
+                      <tr>
+                        <td>{{ trans('admin/hardware/form.manufacturer') }}</td>
+                        <td>
+                          <a href="{{ route('view/manufacturer', $asset->model->manufacturer->id) }}">
+                          {{ $asset->model->manufacturer->name }}
+                          </a>
+                         </td>
+                      </tr>
+                      <tr>
+                        <td>{{ trans('admin/hardware/form.model') }}</td>
+                        <td>
+                          <a href="{{ route('view/model', $asset->model->id) }}">
+                          {{ $asset->model->name }}
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>{{ trans('admin/models/table.modelnumber') }}</td>
+                        <td>
+                          {{ $asset->model->modelno }}
+                         </td>
+                      </tr>
                     @endif
 
                     @if ($asset->model->fieldset)
@@ -160,7 +132,7 @@
 
                               @if ($field->isFieldDecryptable($asset->{$field->db_column_name()} ))
 
-                                  @can('superuser')
+                                  @can('admin')
                                       @if (($field->format=='URL') && ($asset->{$field->db_column_name()}!=''))
                                           <a href="{{ \App\Helpers\Helper::gracefulDecrypt($field, $asset->{$field->db_column_name()}) }}" target="_new">{{ \App\Helpers\Helper::gracefulDecrypt($field, $asset->{$field->db_column_name()}) }}</a>
                                       @else
@@ -216,13 +188,9 @@
                       <tr>
                         <td>{{ trans('admin/hardware/form.supplier') }}</td>
                         <td>
-                            @can ('superuser')
-                                  <a href="{{ route('view/supplier', $asset->supplier_id) }}">
-                                  {{ $asset->supplier->name }}
-                                  </a>
-                                @else
-                                {{ $asset->supplier->name }}
-                            @endcan
+                          <a href="{{ route('view/supplier', $asset->supplier_id) }}">
+                          {{ $asset->supplier->name }}
+                          </a>
                         </td>
                       </tr>
                     @endif
@@ -292,8 +260,6 @@
                       </tr>
                     @endif
 
-
-
                     @if ($asset->expected_checkin!='')
                       <tr>
                         <td>{{ trans('admin/hardware/form.expected_checkin') }}</td>
@@ -314,39 +280,6 @@
                         </td>
                       </tr>
                     @endif
-
-                    @if ($asset->assetloc)
-                        <tr>
-                            <td>{{ trans('general.location') }}</td>
-                            <td>
-                                @can('superuser')
-                                    <a href="{{ route('view/location', $asset->assetloc->id) }}">
-                                    {{ $asset->assetloc->name }}
-                                    </a>
-                                @else
-                                    {{ $asset->assetloc->name }}
-                                @endcan
-                            </td>
-                        </tr>
-                    @endif
-
-                    @if ($asset->defaultLoc)
-                        <tr>
-                            <td>{{ trans('admin/hardware/form.default_location') }}</td>
-                            <td>
-                                @can('superuser')
-                                    <a href="{{ route('view/location', $asset->defaultLoc->id) }}">
-                                    {{ $asset->defaultLoc->name }}
-                                    </a>
-                                @else
-                                    {{ $asset->defaultLoc->name }}
-                                @endcan
-                            </td>
-                        </tr>
-                    @endif
-
-
-
                   </tbody>
                 </table>
               </div> <!-- /table-responsive -->
@@ -572,9 +505,6 @@
                       <th class="col-md-2"><span class="line"></span>{{ trans('table.actions') }}</th>
                       <th class="col-md-2"><span class="line"></span>{{ trans('general.user') }}</th>
                       <th class="col-md-3"><span class="line"></span>{{ trans('general.notes') }}</th>
-                      @if  (App\Models\Setting::getSettings()->require_accept_signature=='1')
-                      <th class="col-md-3"><span class="line"></span>{{ trans('general.signature') }}</th>
-                      @endif
                   </tr>
                 </thead>
                 <tbody>
@@ -583,41 +513,27 @@
                       <tr>
                         <td>{{ $log->created_at }}</td>
                         <td>
-                            @if ($log->action_type != 'requested')
-                                @if (isset($log->user))
-                                    {{ $log->user->fullName() }}
-                                @endif
+                            @if (isset($log->adminlog))
+                            {{ $log->adminlog->fullName() }}
+                            @else
+                            Deleted Admin
                             @endif
                         </td>
                         <td>{{ $log->action_type }}</td>
                         <td>
-                          @if ($log->action_type=='uploaded')
+                          @if ((isset($log->checkedout_to)) && ($log->checkedout_to!=0) && ($log->checkedout_to!=''))
 
-                            {{ $log->filename }}
-                          @elseif ((isset($log->target_id)) && ($log->target_id!=0) && ($log->target_id!=''))
+                            @if ($log->userlog)
 
-
-                            @if ($log->target instanceof \App\Models\User)
-
-                              @if ($log->target->deleted_at=='')
-                                <a href="{{ route('view/user', $log->target_id) }}">
-                                {{ $log->target->fullName() }}
+                              @if ($log->userlog->deleted_at=='')
+                                <a href="{{ route('view/user', $log->checkedout_to) }}">
+                                {{ $log->userlog->fullName() }}
                                 </a>
+
                               @else
-                                <del>{{ $log->target->fullName() }}</del>
+                                <del>{{ $log->userlog->fullName() }}</del>
                               @endif
-                            @elseif($log->target instanceof \App\Models\Asset) 
-                              @if ($log->target->deleted_at=='')
-                                <a href="{{ route('view/hardware', $log->target_id) }}">
-                                {{ $log->target->showAssetName() }}
-                                </a>
-                              @else
-                                <del>{{ $log->target->showAssetName() }}</del>
-                              @endif
-                            @elseif (($log->action_type=='accepted') || ($log->action_type=='declined'))
-                                    {{ $log->item->assigneduser->fullName() }}
                             @else
-
                               Deleted User
                             @endif
                           @endif
@@ -626,13 +542,6 @@
                           @if ($log->note) {{ $log->note }}
                           @endif
                         </td>
-                          @if  (App\Models\Setting::getSettings()->require_accept_signature=='1')
-                          <td>
-                              @if (($log->accept_signature!='') && (($log->action_type=='accepted') || ($log->action_type=='declined')))
-                                  <a href="{{ route('log.signature.view', ['filename' => $log->accept_signature ]) }}" data-toggle="lightbox" data-type="image"><img src="{{ route('log.signature.view', ['filename' => $log->accept_signature ]) }}" class="img-responsive"></a>
-                               @endif
-                          </td>
-                          @endif
                       </tr>
 
                     @endforeach

@@ -8,18 +8,18 @@ return array(
 
     'create' => array(
         'error'   => 'Status Label was not created, please try again.',
-        'success' => 'La etichetta di stato è creato correttamente.'
+        'success' => 'Status Label created successfully.'
     ),
 
     'update' => array(
         'error'   => 'Status Label was not updated, please try again',
-        'success' => 'La etichetta di stato è stato aggiornato correttamente.'
+        'success' => 'Status Label updated successfully.'
     ),
 
     'delete' => array(
         'confirm'   => 'Are you sure you wish to delete this Status Label?',
         'error'   => 'There was an issue deleting the Status Label. Please try again.',
-        'success' => 'L\'etichetta di stato è stata cancellata correttamente.'
+        'success' => 'The Status Label was deleted successfully.'
     )
 
 );

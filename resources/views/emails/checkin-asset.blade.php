@@ -1,15 +1,15 @@
 @extends('emails/layouts/default')
 
 @section('content')
-<p>{{ trans('mail.hello') }} {{ $first_name }},</p>
+<p>Hello {{ $first_name }},</p>
 
 
-<p>{{ trans('mail.the_following_item') }}
+<p>The following item has been checked in: 
 
 <table>
 	<tr>
 		<td style="background-color:#ccc">
-			{{ trans('mail.asset_name') }}
+			Asset Name:
 		</td>
 		<td>
 			<strong>{{ $item_name }}</strong>
@@ -18,7 +18,7 @@
 	@if ($item_tag)
 		<tr>
 			<td style="background-color:#ccc">
-				{{ trans('mail.asset_tag') }}
+				Asset Tag:
 			</td>
 			<td>
 				<strong>{{ $item_tag }}</strong>
@@ -27,7 +27,7 @@
 	@endif
 	<tr>
 		<td style="background-color:#ccc">
-			{{ trans('mail.checkin_date') }}
+			Checkin Date:
 		</td>
 		<td>
 			<strong>{{ $checkin_date }}</strong>
@@ -36,7 +36,7 @@
 	@if ($note)
 		<tr>
 			<td style="background-color:#ccc">
-				{{ trans('mail.additional_notes') }}
+				Additional Notes:
 			</td>
 			<td>
 				<strong>{{ $note }}</strong>

@@ -231,7 +231,7 @@ View Assets for  {{ $user->fullName() }}
         @endif
 
       <div class="box-body">
-        @if (count($userlog) > 0)
+        @if (count($user->userlog) > 0)
         <div class="table-responsive">
         <table class="table table-striped" id="example">
             <thead>
@@ -244,47 +244,68 @@ View Assets for  {{ $user->fullName() }}
                 </tr>
             </thead>
             <tbody>
-                @foreach ($userlog as $log)
+                @foreach ($user->userlog as $log)
                 <tr>
                     <td class="text-center">
-                        @if ($log->itemType()=="asset")
+                        @if (($log->assetlog) && ($log->asset_type=="hardware"))
                             <i class="fa fa-barcode"></i>
-                        @elseif ($log->itemType()=="accessory")
+                        @elseif (($log->accessorylog) && ($log->asset_type=="accessory"))
                             <i class="fa fa-keyboard-o"></i>
-                        @elseif ($log->itemType()=="consumable")
+                        @elseif (($log->consumablelog) && ($log->asset_type=="consumable"))
                             <i class="fa fa-tint"></i>
-                        @elseif ($log->itemType()=="license")
+                        @elseif (($log->licenselog) && ($log->asset_type=="software"))
                             <i class="fa fa-floppy-o"></i>
                         @else
-                            <i class="fa fa-times"></i>
+                        <i class="fa fa-times"></i>
                         @endif
 
                     </td>
+                    <td>{{ $log->action_type }}</td>
                     <td>
-                        {{ strtolower(trans('general.'.str_replace(' ','_',$log->action_type))) }}
-                    </td>
-                    <td>
-                        @if ($log->itemType()=="asset")
-                            @if ($log->item->deleted_at=='')
-                                {{ $log->item->showAssetName() }}
+
+                        @if (($log->assetlog) && ($log->asset_type=="hardware"))
+
+                            @if ($log->assetlog->deleted_at=='')
+
+                                    {{ $log->assetlog->showAssetName() }}
+
                             @else
-                                <del>{{ $log->item->showAssetName() }}</del> (deleted)
+                                <del>{{ $log->assetlog->showAssetName() }}</del> (deleted)
                             @endif
 
-                        @elseif (!is_null($log->itemType()))
-                             @if ($log->item->deleted_at=='')
-                                {{ $log->item->name }}
+                        @elseif (($log->licenselog) && ($log->asset_type=="software"))
+
+                            @if ($log->licenselog->deleted_at=='')
+
+                                    {{ $log->licenselog->name }}
+
+                            @else
+                                <del>{{ $log->licenselog->name }}</del> (deleted)
+                            @endif
+
+                         @elseif (($log->consumablelog) && ($log->asset_type=="consumable"))
+
+                             @if ($log->consumablelog->deleted_at=='')
+                                {{ $log->consumablelog->name }}
                              @else
-                                 <del>{{ $log->item->name }}</del> (deleted)
+                                 <del>{{ $log->consumablelog->name }}</del> (deleted)
                              @endif
+
+                        @elseif (($log->accessorylog) && ($log->asset_type=="accessory"))
+                            @if ($log->accessorylog->deleted_at=='')
+                                {{ $log->accessorylog->name }}
+                            @else
+                                <del>{{ $log->accessorylog->name }}</del> (deleted)
+                            @endif
+
                          @else
                              {{ trans('general.bad_data') }}
                         @endif
 
                     </td>
                     <td>
-                        @if ($log->user)
-                        {{ $log->user->fullName() }}
+                        @if ($log->adminlog)
+                        {{ $log->adminlog->fullName() }}
                         @endif
                     </td>
                     <td>{{ $log->created_at }}</td>

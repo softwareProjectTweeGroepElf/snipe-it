@@ -222,7 +222,7 @@ class Ldap extends Model
                 return true;
             } else {
                 LOG::debug('Could not create user.'.$user->getErrors());
-                throw new Exception("Could not create user: ".$user->getErrors());
+                exit;
             }
         }
 

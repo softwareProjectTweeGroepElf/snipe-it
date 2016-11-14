@@ -2,16 +2,15 @@
 namespace App\Models;
 
 use App\Models\Company;
-use App\Models\Loggable;
 use DB;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Watson\Validating\ValidatingTrait;
+
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class License extends Depreciable
 {
     use SoftDeletes;
     use CompanyableTrait;
-    use Loggable;
     protected $injectUniqueIdentifier = true;
     use ValidatingTrait;
 
@@ -55,8 +54,8 @@ class License extends Depreciable
     */
     public function assetlog()
     {
-        return $this->hasMany('\App\Models\Actionlog', 'item_id')
-            ->where('item_type', '=', License::class)
+        return $this->hasMany('\App\Models\Actionlog', 'asset_id')
+            ->where('asset_type', '=', 'software')
             ->orderBy('created_at', 'desc');
     }
 
@@ -65,8 +64,8 @@ class License extends Depreciable
     */
     public function uploads()
     {
-        return $this->hasMany('\App\Models\Actionlog', 'item_id')
-            ->where('item_type', '=', License::class)
+        return $this->hasMany('\App\Models\Actionlog', 'asset_id')
+            ->where('asset_type', '=', 'software')
             ->where('action_type', '=', 'uploaded')
             ->whereNotNull('filename')
             ->orderBy('created_at', 'desc');
@@ -101,20 +100,6 @@ class License extends Depreciable
                    ->count();
     }
 
-    // We do this to eager load the "count" of seats from the controller.  Otherwise calling "count()" on each model results in n+1
-    public function licenseSeatsRelation()
-    {
-        return $this->hasMany(LicenseSeat::class)->whereNull('deleted_at')->selectRaw('license_id, count(*) as count')->groupBy('license_id');
-    }
-
-    public function getLicenseSeatsCountAttribute()
-    {
-        if ($this->licenseSeatsRelation->first()) {
-            return $this->licenseSeatsRelation->first()->count;
-        }
-
-        return 0;
-    }
 
     /**
     * Get total licenses not checked out
@@ -130,47 +115,37 @@ class License extends Depreciable
     /**
      * Get the number of available seats
      */
-    public function availCount()
+    public function availcount()
     {
-        return $this->licenseSeatsRelation()
-            ->whereNull('asset_id');
-    }
-
-    public function getAvailSeatsCountAttribute()
-    {
-        if ($this->availCount->first()) {
-            return $this->availCount->first()->count;
-        }
-
-        return 0;
+        return LicenseSeat::whereNull('assigned_to')
+                    ->whereNull('asset_id')
+                    ->where('license_id', '=', $this->id)
+                    ->whereNull('deleted_at')
+                    ->count();
     }
 
     /**
      * Get the number of assigned seats
      *
      */
-    public function assignedCount()
+    public function assignedcount()
     {
-        return $this->licenseSeatsRelation()->where(function ($query) {
-            $query->whereNotNull('assigned_to')
-            ->orWhereNotNull('asset_id');
-        });
-    }
 
-    public function getAssignedSeatsCountAttribute()
-    {
-        // dd($this->licenseSeatsRelation->first());
-        if ($this->assignedCount->first()) {
-            return $this->assignedCount->first()->count;
-        }
+        return \App\Models\LicenseSeat::where('license_id', '=', $this->id)
+            ->where(function ($query) {
 
-        return 0;
+                $query->whereNotNull('assigned_to')
+                ->orWhereNotNull('asset_id');
+            })
+        ->count();
+
+
     }
 
     public function remaincount()
     {
-        $total = $this->licenseSeatsCount;
-        $taken =  $this->assigned_seats;
+        $total = $this->totalSeatsByLicenseID();
+        $taken =  $this->assignedcount();
         $diff =   ($total - $taken);
         return $diff;
     }
@@ -180,7 +155,7 @@ class License extends Depreciable
      */
     public function totalcount()
     {
-        $avail =  $this->availSeatsCount;
+        $avail =  $this->availcount();
         $taken =  $this->assignedcount();
         $diff =   ($avail + $taken);
         return $diff;

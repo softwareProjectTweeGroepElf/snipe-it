@@ -273,19 +273,19 @@
                     <td>{{ $log->created_at }}</td>
                     <td>
                         @if (isset($log->user_id))
-                        {{ $log->user->fullName() }}
+                        {{ $log->adminlog->fullName() }}
                         @endif
                     </td>
                     <td>{{ $log->action_type }}</td>
                     <td>
-                        @if ((isset($log->target_id)) && ($log->target_id!=0) && ($log->target_id!=''))
+                        @if ((isset($log->checkedout_to)) && ($log->checkedout_to!=0) && ($log->checkedout_to!=''))
 
-	                        @if ($log->target->deleted_at=='')
-		                        <a href="{{ route('view/user', $log->target_id) }}">
-		                        {{ $log->user->fullName() }}
+	                        @if ($log->userlog->deleted_at=='')
+		                        <a href="{{ route('view/user', $log->checkedout_to) }}">
+		                        {{ $log->userlog->fullName() }}
 		                         </a>
 		                    @else
-		 						<del>{{ $log->user->fullName() }}</del>
+		 						<del>{{ $log->userlog->fullName() }}</del>
 	                        @endif
 
                         @endif

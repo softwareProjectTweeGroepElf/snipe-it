@@ -4,10 +4,10 @@
         <meta charset="utf-8">
     </head>
     <body>
-        <h2>{{ trans('mail.password_reset') }}</h2>
+        <h2>Password Reset</h2>
 
         <div>
-            {{ trans('mail.to_reset', ['web' => \App\Models\Setting::getSettings()->site_name]) }} {{ URL::to('password/reset', array($token)) }}.
+            To reset your {{ \App\Models\Setting::getSettings()->site_name }} password, complete this form: {{ URL::to('password/reset', array($token)) }}.
         </div>
     </body>
 </html>

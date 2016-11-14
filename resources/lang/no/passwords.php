@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'sent'	        => 'Din passord link har blitt sendt!',
-    'user'			=> 'Den brukeren eksisterer ikke eller har ikke en e-post assosiert',
+    'sent'	        => 'Your password link has been sent!',
+    'user'			=> 'That user does not exist or does not have an email address associated',
 ];
 
