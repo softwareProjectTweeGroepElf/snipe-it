@@ -17,9 +17,7 @@ use App\Models\User as User;
 use App\Models\Supplier as Supplier;
 use App\Models\Statuslabel as Status;
 use App\Models\AssetModel as Model;
-//test
 use Illuminate\Support\Facades\DB;
-//use App\Http\Controllers\Controller;
 
 class AssetRepository implements RepositoryContract
 {

@@ -44,13 +44,14 @@ class ApiController extends Controller
  				$localvar += 1;
  			}
 		}
-		 	
-	  	return response()->json($save);
+		if ($save == null){
+            return "Asset not found";
+        }
+        return response()->json($save);
 	}
 
 	public function deleteAssetById(Request $request, $id){
-		$assetId = intval($assetId);
-		//var_dump($assetId);
+		
 		if ($this->assetRepository->delete($assetId)){
 		 	return "Succes!";
         }
