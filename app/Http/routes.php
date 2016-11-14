@@ -2,15 +2,16 @@
 use App\Models\Statuslabel;
 use App\Models\Location;
 
-
+   Route::get('nice', function(){return "nice";});   
 Route::group([ 'prefix'  => 'api/v1' ], function() {
     /*--- Get All Assets Route ---*/
     Route::get('assets/all', 'ApiController@getAllAssets');
-    Route::get('assets/{id}', 'ApiController@getAssetsById');
-    Route::get('create/asset', 'ApiController@createAsset');
-    Route::get('update/asset/{id}', 'ApiController@updateAsset');
-    Route::get('assets/delete/{assetId}', 'ApiController@deleteAssetById');
-    Route::get('assets/search/{variable}/{waarde}', 'ApiController@getAssetsFiltered');   
+    Route::get('assets/id/{id}', 'ApiController@getAssetsById');
+    Route::get('assets/create', 'ApiController@createAsset');
+    Route::get('assets/update/{id}', 'ApiController@updateAsset');
+    Route::get('assets/delete/{id}', 'ApiController@deleteAssetById');
+    Route::get('assets/search/{variable}/{value}', 'ApiController@getAssetsFiltered');   
+
 });
 
 /*
