@@ -191,6 +191,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        groepelf\reservatie\ReservatieServiceProvider::class,
 
         /*
          * Application Service Providers...
